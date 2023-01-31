@@ -1,3 +1,4 @@
+import fs from "fs";
 import axios from "axios";
 import dotenv from "dotenv";
 
@@ -22,7 +23,10 @@ const weatherLocation = axios.create({
 });
 
 export default class Searches {
-  constructor() {}
+  history = [];
+  constructor() {
+    this.readDB();
+  }
   async location(location = "") {
     try {
       const getData = await mapBox.get(`${location}.json`);
@@ -47,5 +51,28 @@ export default class Searches {
     } catch (error) {
       console.log(error);
     }
+  }
+  saveDB() {
+    fs.writeFileSync(
+      "./db/database.json",
+      JSON.stringify(this.history, null, 2)
+    );
+  }
+  addToHistory(location) {
+    if (this.history.includes(location)) {
+      return;
+    } else {
+      this.history.unshift(location);
+      this.saveDB();
+    }
+  }
+  readDB() {
+    let data;
+    try {
+      data = JSON.parse(fs.readFileSync("./db/database.json", "utf-8"));
+    } catch (error) {
+      data = [];
+    }
+    this.history = data;
   }
 }

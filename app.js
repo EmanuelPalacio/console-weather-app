@@ -17,7 +17,11 @@ const main = async () => {
         const search = await readInput("Ciudad: ");
         const locations = await searches.location(search);
         const id = await listLocations(locations);
+
+        if (id === 0) continue;
+
         const location = locations.find((location) => id === location.id);
+        searches.addToHistory(location);
         const weatherData = await searches.weatherData(location);
 
         console.log("\nInformación de la ciudad\n");
@@ -29,10 +33,10 @@ const main = async () => {
         console.log("Máxima: " + weatherData.temp_max);
         break;
       case 2:
-        //mostrar el historial de las busquedas realizadas
-        break;
-      case 0:
-        //salir de la app
+        searches.history.forEach((location, i) => {
+          const position = i + 1;
+          console.log(`${position}. ${location.name}`);
+        });
         break;
     }
     opt !== 0 && (await pause());
