@@ -12,6 +12,15 @@ const mapBox = axios.create({
     lenguage: "es",
   },
 });
+const weatherLocation = axios.create({
+  baseURL: `https://api.openweathermap.org/data/2.5/weather`,
+  params: {
+    appid: process.env.OPEN_WHEATER_KEY,
+    units: "metric",
+    lang: "es",
+  },
+});
+
 export default class Searches {
   constructor() {}
   async location(location = "") {
@@ -23,6 +32,18 @@ export default class Searches {
         lng: e.center[0],
         lat: e.center[1],
       }));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async weatherData(data) {
+    try {
+      const getData = await weatherLocation.get("", {
+        params: { lat: data.lat, lon: data.lng },
+      });
+
+      return getData.data.main;
     } catch (error) {
       console.log(error);
     }

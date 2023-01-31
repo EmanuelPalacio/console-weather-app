@@ -18,15 +18,15 @@ const main = async () => {
         const locations = await searches.location(search);
         const id = await listLocations(locations);
         const location = locations.find((location) => id === location.id);
-        console.log(location);
+        const weatherData = await searches.weatherData(location);
 
         console.log("\nInformación de la ciudad\n");
         console.log("Ciudad:" + location.name);
         console.log("Lat: " + location.lat);
         console.log("Lng: " + location.lng);
-        console.log("Temperatura: ");
-        console.log("Mínima: ");
-        console.log("Máxima: ");
+        console.log("Temperatura: " + weatherData.temp);
+        console.log("Mínima: " + weatherData.temp_min);
+        console.log("Máxima: " + weatherData.temp_max);
         break;
       case 2:
         //mostrar el historial de las busquedas realizadas
